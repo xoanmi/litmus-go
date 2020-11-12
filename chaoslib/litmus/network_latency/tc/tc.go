@@ -69,6 +69,8 @@ func AddIPFilter(PID int, IP net.IP, port int) error {
 	log.Info(fmt.Sprintf("[tc] AddIPFilter: Target PID=%d, destination IP=%s, destination Port=%d", PID, IP, port))
 
 	tc := fmt.Sprintf("nsenter -t %d -n tc filter add dev eth0 protocol ip parent 1:0 prio 3 u32 match ip dst %s match ip dport %d 0xffff flowid 1:3", PID, IP, port)
+	tc := fmt.Sprintf("nsenter -t %d -n tc filter add dev eth0 protocol ip parent 1:0 prio 4 u32 match ip src %s match ip sport %d 0xffff flowid 1:3", PID, IP, port)
+
 	cmd := exec.Command("/bin/bash", "-c", tc)
 
 	out, err := cmd.CombinedOutput()
